@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 
 // components / inhouse files
 import authRoutes from './routes/auth.route.js';
-
+import messageRoutes from './routes/message.route.js'
 
 dotenv.config();
 
@@ -22,6 +22,9 @@ app.use(cookieParser());
 
 // auth route
 app.use("/api/auth",authRoutes);
+
+// message route
+app.use("/api/message",messageRoutes);
 
 // listening port
 app.listen(PORT,()=>{
