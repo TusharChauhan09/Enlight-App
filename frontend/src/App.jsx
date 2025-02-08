@@ -1,16 +1,18 @@
 import { axiosInstance } from "./lib/axios"
 
 import Navbar from "./components/Navbar"
-import HomePage from "./components/HomePage"
-import SignUpPage from "./components/SignUpPage"
-import LoginPage from "./components/LoginPage"
-import SettingsPage from "./components/SettingsPage"
-import ProfilePage from "./components/ProfilePage"
+import HomePage from "./pages/HomePage"
+import SignUpPage from "./pages/SignUpPage"
+import LoginPage from "./pages/LoginPage"
+import SettingsPage from "./pages/SettingsPage"
+import ProfilePage from "./pages/ProfilePage"
 
 import { Routes, Route, Navigate } from "react-router-dom"
 import { useAuthStore } from "./store/useAuthStore"
 import { useEffect } from "react"
+
 import { Loader } from "lucide-react"
+import {Toaster} from 'react-hot-toast'
 
 const App = () => {
 
@@ -32,7 +34,6 @@ const App = () => {
   }
 
 
-
   return (
     <div>
 
@@ -41,13 +42,15 @@ const App = () => {
 
       {/* Routes */}
       <Routes>
-        <Route path="/" element={ (authUser!==null) ?  <HomePage/> : <Navigate to="/login" /> } />
-        <Route path="/signup" element={ (authUser===null) ? <SignUpPage/> : <Navigate to="/" /> } />
-        <Route path="/login" element={ (authUser===null) ? <LoginPage/>  : <Navigate to="/" /> } />
-        <Route path="/settings" element={ <SettingsPage/> } />
-        <Route path="/profile" element={ (authUser!==null) ? <ProfilePage/> : <Navigate to="/login" /> } />
+        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
 
+      <Toaster />
+      
     </div>
   )
 }
