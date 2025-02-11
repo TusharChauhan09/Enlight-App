@@ -1,13 +1,13 @@
 // external lib
-import express from 'express';
-import dotenv from 'dotenv';
-import { connectDB } from './lib/db.js';
+import express from "express";
+import dotenv from "dotenv";
+import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
-import cors from 'cors';
+import cors from "cors";
 
 // components / inhouse files
-import authRoutes from './routes/auth.route.js';
-import messageRoutes from './routes/message.route.js'
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
 
 dotenv.config();
 
@@ -17,23 +17,25 @@ const app = express();
 const PORT = process.env.PORT;
 
 // body parser middleware
-app.use(express.json())
+app.use(express.json());
 // cookie parser
 app.use(cookieParser());
-// 
-app.use(cors({
-    origin: "http://localhost:5173",  // Allow frontend origin
-    credentials: true  // Ensure credentials are included
-}));
+//
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow frontend origin
+    credentials: true, // Ensure credentials are included
+  })
+);
 
 // auth route
-app.use("/api/auth",authRoutes);
+app.use("/api/auth", authRoutes);
 
 // message route
-app.use("/api/message",messageRoutes);
+app.use("/api/message", messageRoutes);
 
 // listening port
-app.listen(PORT,()=>{
-    console.log("server is running on PORT: "+PORT);
-    connectDB();
+app.listen(PORT, () => {
+  console.log("server is running on PORT: " + PORT);
+  connectDB();
 });
