@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req,res)=>{
     try{
@@ -25,7 +26,7 @@ export const getMessages = async (req,res) => {
 
         const messages = await Message.find({
             $or:[
-                {senderId: myId, receiverId: receiverId},
+                {senderId: myId, receiverId: userToChatId},
                 {senderId: userToChatId, receiverId: myId}
             ]
         })
@@ -42,7 +43,7 @@ export const sendMessage = async (req,res) => {
     try{
         const {text, image} = req.body;
         const {id:receiverId} = req.params;
-        const myId = req.user._id;
+        const senderId = req.user._id;
 
         let imageUrl;
         // if there is a image in the message
@@ -62,6 +63,12 @@ export const sendMessage = async (req,res) => {
         await newMessage.save();
 
         // realtime functionality (socket.io)
+        const receiverSocketId = getReceiverSocketId(receiverId);   // receive the socket id of the user if its online at the point | if ofline then it wil display the message from the data base
+
+        //check if online 
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage",newMessage);
+        }
 
         res.status(201).json(newMessage);
     }
