@@ -1,10 +1,17 @@
 import { create } from "zustand";
 
 export const useThemeStore = create((set) => ({
-//  store the theme in local storage of the browser
-  theme: localStorage.getItem("chat-theme") || "Forest",
+  theme: "Forest", // default theme
   setTheme: (theme) => {
     localStorage.setItem("chat-theme", theme);
     set({ theme });
+  },
+  loadTheme: () => {
+    if (typeof window !== "undefined") {
+      const storedTheme = localStorage.getItem("chat-theme");
+      if (storedTheme) {
+        set({ theme: storedTheme });
+      }
+    }
   },
 }));
